@@ -11,7 +11,7 @@ $provider->getFreeMem();
 ## Available methods
 - getOsRelease()
 - getOsType();
-- getKernelVersion();
+- getOsKernelVersion();
 - getArchitecture();
 - getDbVersion(\PDO $connection);
 - getDbInfo(\PDO $connection);
