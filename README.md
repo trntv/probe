@@ -42,8 +42,8 @@ $provider->getFreeMem();
 - getPing(array $hosts = null, $count = 2);
 - getServerVariable($key);
 - getPhpSapiName();
-- isFpmSapi();
-- isCliSapi();
+- isFpm();
+- isCli();
 
 ## Supported OS
 - Linux
