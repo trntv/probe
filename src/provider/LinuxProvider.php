@@ -30,7 +30,7 @@ class LinuxProvider extends AbstractUnixProvider
     /**
      * @inheritdoc
      */
-    public function getKernelVersion()
+    public function getOsKernelVersion()
     {
         return shell_exec('/bin/uname -r');
     }

@@ -11,7 +11,7 @@ $provider->getFreeMem();
 ## Available methods
 - getOsRelease()
 - getOsType();
-- getKernelVersion();
+- getOsKernelVersion();
 - getArchitecture();
 - getDbVersion(\PDO $connection);
 - getDbInfo(\PDO $connection);
@@ -42,8 +42,8 @@ $provider->getFreeMem();
 - getPing(array $hosts = null, $count = 2);
 - getServerVariable($key);
 - getPhpSapiName();
-- isFpmSapi();
-- isCliSapi();
+- isFpm();
+- isCli();
 
 ## Supported OS
 - Linux

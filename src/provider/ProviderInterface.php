@@ -24,7 +24,7 @@ interface ProviderInterface
     /**
      * @return mixed
      */
-    public function getKernelVersion();
+    public function getOsKernelVersion();
 
     /**
      * @return string
