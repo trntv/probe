@@ -154,16 +154,6 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * @param integer|boolean $key
-     * @return mixed string|array
-     */
-    public function getLoadAverage($key = false)
-    {
-        $la = array_combine([1,5,15], sys_getloadavg());
-        return ($key !== false && array_key_exists($key, $la)) ? $la[$key] : $la;
-    }
-
-    /**
      *
      */
     public function getDiskUsage()

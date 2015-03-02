@@ -81,4 +81,18 @@ abstract class AbstractUnixProvider extends AbstractProvider
         }
         return $this->memInfo;
     }
+
+    /**
+     * @param string $interval
+     * @return mixed
+     */
+    public function getLoadAverage($interval = '5')
+    {
+        $la = array_combine(['1','5','15'], sys_getloadavg());
+        if (array_key_exists($interval, $la)) {
+            return $la[$interval];
+        } else {
+            throw new \InvalidArgumentException;
+        }
+    }
 }
