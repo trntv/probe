@@ -18,18 +18,22 @@ class Factory
      * @var array
      */
     public static $providers = [
-        'Linux' => 'probe\provider\LinuxProvider'
+        'Linux' => 'probe\provider\LinuxProvider',
+        'Windows' => 'probe\provider\WindowsProvider',
     ];
 
     /**
      * @return provider\AbstractProvider|null
      */
-    public static function create()
+    public static function create($config = [])
     {
         if (null === self::$provider) {
             $osType = self::getOsType();
             if (array_key_exists($osType, self::$providers)) {
                 self::$provider = new self::$providers[$osType];
+                foreach ($config as $k => $v) {
+                    self::$provider->{$k} = $v;
+                }
             }
         }
         return self::$provider;

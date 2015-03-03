@@ -70,6 +70,11 @@ interface ProviderInterface
     public function getFreeSwap();
 
     /**
+     * @return mixed
+     */
+    public function getUsedSwap();
+
+    /**
      * @return string
      */
     public function getHostname();
@@ -115,10 +120,9 @@ interface ProviderInterface
     public function getLoadAverage();
 
     /**
-     * @param int $interval
      * @return array
      */
-    public function getCpuUsage($interval = 1);
+    public function getCpuUsage();
 
     /**
      * @return mixed
