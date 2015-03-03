@@ -8,6 +8,17 @@ namespace probe\provider;
  */
 class WindowsProvider extends AbstractProvider
 {
+    public $wmiHost;
+    public $wmiUsername;
+    public $wmiPassword;
+
+    /**
+     * @var \COM
+     */
+    protected $wmiConnection;
+
+    protected $cpuInfo;
+
     /**
      * @return string
      * @throws \Exception
@@ -56,42 +67,20 @@ class WindowsProvider extends AbstractProvider
      */
     public function getUptime()
     {
-        date_default_timezone_set('UTC');
-        $buffer = $this->getWMI()->ExecQuery("SELECT LastBootUpTime, LocalDateTime FROM Win32_OperatingSystem");
-        if ($buffer) {
-            $byear = (int) substr($buffer[0]['LastBootUpTime'], 0, 4);
-            $bmonth = (int) substr($buffer[0]['LastBootUpTime'], 4, 2);
-            $bday = (int) substr($buffer[0]['LastBootUpTime'], 6, 2);
-            $bhour = (int) substr($buffer[0]['LastBootUpTime'], 8, 2);
-            $bminute = (int) substr($buffer[0]['LastBootUpTime'], 10, 2);
-            $bseconds = (int) substr($buffer[0]['LastBootUpTime'], 12, 2);
-            $lyear = (int) substr($buffer[0]['LocalDateTime'], 0, 4);
-            $lmonth = (int) substr($buffer[0]['LocalDateTime'], 4, 2);
-            $lday = (int) substr($buffer[0]['LocalDateTime'], 6, 2);
-            $lhour = (int) substr($buffer[0]['LocalDateTime'], 8, 2);
-            $lminute = (int) substr($buffer[0]['LocalDateTime'], 10, 2);
-            $lseconds = (int) substr($buffer[0]['LocalDateTime'], 12, 2);
-            $boottime = mktime($bhour, $bminute, $bseconds, $bmonth, $bday, $byear);
-            $localtime = mktime($lhour, $lminute, $lseconds, $lmonth, $lday, $lyear);
-            $result = $localtime - $boottime;
-            return $result;
-        } else {
-            throw new \RuntimeException;
+        $buffer = $this->getWMI()->ExecQuery("SELECT SystemUpTime FROM Win32_PerfFormattedData_PerfOS_System");
+        foreach ($buffer as $b){
+           return $b->SystemUpTime;
         }
     }
 
     /**
-     * @param integer|boolean $key
-     *
      * @return mixed string|array
      * @throws \Exception
      */
-    public function getLoadAverage($key = false)
+    public function getLoadAverage()
     {
-        $wmi = $this->getWMI();
-
         $load = [];
-        foreach ($wmi->ExecQuery("SELECT LoadPercentage FROM Win32_Processor") as $cpu) {
+        foreach ($this->getCpuInfo() as $cpu) {
             $load[] = $cpu->LoadPercentage;
         }
 
@@ -104,33 +93,33 @@ class WindowsProvider extends AbstractProvider
     public function getCpuCores()
     {
         $cpuInfo = $this->getCpuInfo();
-        return $cpuInfo[0]->NumberOfLogicalProcessors;
+        foreach($cpuInfo as $obj) {
+            return $obj->NumberOfLogicalProcessors;
+        }
     }
 
     public function getCpuModel()
     {
         $cpuInfo = $this->getCpuInfo();
-        return $cpuInfo[0]->Name;
+        foreach($cpuInfo as $obj) {
+            return $obj->Name;
+        }
     }
 
     public function getCpuVendor()
     {
         $cpuInfo = $this->getCpuInfo();
-        return $cpuInfo[0]->Manufacturer;
+        foreach($cpuInfo as $obj) {
+            return $obj->Manufacturer;
+        }
     }
 
     public function getCpuInfo()
     {
-        $wmi = $this->getWMI();
-
-
-        $object = $wmi->ExecQuery("SELECT Name, Manufacturer, CurrentClockSpeed, NumberOfLogicalProcessors FROM Win32_Processor");
-
-        if (!is_object($object)) {
-            $object = $wmi->ExecQuery("SELECT Name, Manufacturer, CurrentClockSpeed FROM Win32_Processor");
+        if ($this->cpuInfo === null) {
+            $this->cpuInfo = $this->getWMI()->ExecQuery("SELECT * FROM Win32_Processor");
         }
-
-        return $object;
+        return $this->cpuInfo;
     }
 
     /**
@@ -139,11 +128,10 @@ class WindowsProvider extends AbstractProvider
      */
     public function getTotalMem()
     {
-        $wmi = $this->getWMI();
         $total_memory = 0;
 
-        foreach ($wmi->ExecQuery("SELECT TotalPhysicalMemory FROM Win32_ComputerSystem") as $cs) {
-            $total_memory = $cs->TotalPhysicalMemory;
+        foreach($this->getWMI()->ExecQuery("SELECT TotalPhysicalMemory FROM Win32_ComputerSystem") as $obj) {
+            $total_memory = $obj->TotalPhysicalMemory;
             break;
         }
 
@@ -156,34 +144,18 @@ class WindowsProvider extends AbstractProvider
      */
     public function getFreeMem()
     {
-        $wmi = $this->getWMI();
-        $free_memory = 0;
-
-        foreach ($wmi->ExecQuery("SELECT FreePhysicalMemory FROM Win32_OperatingSystem") as $os) {
-            $free_memory = $os->FreePhysicalMemory;
-            break;
+        $objSet = $this->getWMI()->ExecQuery("SELECT FreePhysicalMemory FROM Win32_OperatingSystem");
+        foreach ($objSet as $obj) {
+            return $obj->FreePhysicalMemory;
         }
-
-        return $free_memory * 1024;
-
-    }
-
-
-    protected function getWMI()
-    {
-        $wmi = new \COM('winmgmts:{impersonationLevel=impersonate}//./root/cimv2');
-
-        if (!is_object($wmi)) {
-            throw new \RuntimeException('WMI access error. Please enable DCOM in php.ini and allow the current
-                user to access the WMI DCOM object.');
-        }
-
-        return $wmi;
     }
 
     public function getOsRelease()
     {
-        // TODO: Implement getOsRelease() method.
+        $objSet = $this->getWMI()->ExecQuery("SELECT Name FROM Win32_OperatingSystem");
+        foreach ($objSet as $obj) {
+            return $obj->name;
+        }
     }
 
     public function getOsType()
@@ -191,30 +163,73 @@ class WindowsProvider extends AbstractProvider
         return 'Windows';
     }
 
-    /**
-     * @return array|null
-     */
-    public function getMemoryInfo()
-    {
-        // TODO: Implement getMemoryInfo() method.
-    }
-
     public function getTotalSwap()
     {
-        // TODO: Implement getTotalSwap() method.
+        $total = 0;
+        $objSet = $this->getWMI()->ExecQuery("SELECT AllocatedBaseSize FROM Win32_PageFileUsage");
+        foreach ($objSet as $device) {
+            $total += $device->AllocatedBaseSize;
+        }
+        return $total;
+    }
+
+    public function getUsedSwap()
+    {
+        $used = 0;
+        $objSet = $this->getWMI()->ExecQuery("SELECT CurrentUsage FROM Win32_PageFileUsage");
+        foreach ($objSet as $device) {
+            $used += $device->CurrentUsage;
+        }
+        return $used;
     }
 
     public function getFreeSwap()
     {
-        // TODO: Implement getFreeSwap() method.
+        return $this->getTotalSwap() - $this->getUsedSwap();
     }
 
     /**
-     * @param int $interval
      * @return array
      */
-    public function getCpuUsage($interval = 1)
+    public function getCpuUsage()
     {
-        // TODO: Implement getCpuUsage() method.
+        $load = [];
+        foreach ($this->getWMI()->ExecQuery("SELECT LoadPercentage FROM Win32_Processor") as $obj) {
+            $load[] = $obj->LoadPercentage;
+        }
+
+        return $load;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOsKernelVersion()
+    {
+        $wmi = $this->getWMI();
+        $objSet = $wmi->ExecQuery("SELECT BuildNumber FROM Win32_OperatingSystem");
+        foreach ($objSet as $obj) {
+            return $obj->BuildNumber;
+        }
+    }
+
+    /**
+     * @return \COM
+     */
+    protected function getWMI()
+    {
+        if ($this->wmiConnection === null) {
+            $wmiLocator = new \COM('WbemScripting.SWbemLocator');
+            try {
+                $this->wmiConnection = $wmiLocator->ConnectServer($this->wmiHost, 'root\CIMV2', $this->wmiUsername, $this->wmiPassword);
+                $this->wmiConnection->Security_->impersonationLevel = 3;
+            } catch (\Exception $e) {
+                if ($e->getCode() == '-2147352567') {
+                    $this->wmiConnection = $wmiLocator->ConnectServer($this->wmiHosthost, 'root\CIMV2', null, null);
+                    $this->wmiConnection->Security_->impersonationLevel = 3;
+                }
+            }
+        }
+        return $this->wmiConnection;
     }
 }
