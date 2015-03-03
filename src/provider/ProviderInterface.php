@@ -116,19 +116,19 @@ interface ProviderInterface
     public function getUptime();
 
     /**
-     * @return array|null
+     * @return int|null
      */
     public function getCpuCores();
+
+    /**
+     * @return int|null
+     */
+    public function getCpuPhysicalCores();
 
     /**
      * @return array|null
      */
     public function getCpuModel();
-
-    /**
-     * @return mixed
-     */
-    public function getLoadAverage();
 
     /**
      * @return array

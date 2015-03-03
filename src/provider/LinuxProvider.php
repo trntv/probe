@@ -142,6 +142,15 @@ class LinuxProvider extends AbstractUnixProvider
     public function getCpuCores()
     {
         $cu = $this->getCpuinfo();
+        return array_key_exists('siblings', $cu) ? $cu['siblings'] : null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCpuPhysicalCores()
+    {
+        $cu = $this->getCpuinfo();
         return array_key_exists('cpu cores', $cu) ? $cu['cpu cores'] : null;
     }
 }

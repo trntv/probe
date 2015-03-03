@@ -29,8 +29,8 @@ $provider->getFreeMem();
 - isMacOs();
 - getUptime();
 - getCpuCores();
+- getCpuPhysicalCore();
 - getCpuModel();
-- getLoadAverage();
 - getCpuUsage();
 - getServerIP();
 - getExternalIP();
@@ -46,6 +46,9 @@ $provider->getFreeMem();
 - getPhpSapiName();
 - isFpm();
 - isCli();
+
+## Table of methods supported by different OS
+TBD
 
 ## Supported OS
 - Linux

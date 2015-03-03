@@ -123,7 +123,7 @@ class WindowsProvider extends AbstractProvider
     }
 
     /**
-     * @return array|null
+     * @inheritdoc
      */
     public function getCpuCores()
     {
@@ -134,7 +134,18 @@ class WindowsProvider extends AbstractProvider
     }
 
     /**
-     * @return mixed
+     * @inheritdoc
+     */
+    public function getCpuPhysicalCores()
+    {
+        $cpuInfo = $this->getCpuInfo();
+        foreach ($cpuInfo as $obj) {
+            return $obj->NumberOfCores;
+        }
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getCpuModel()
     {
