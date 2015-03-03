@@ -62,6 +62,11 @@ interface ProviderInterface
     /**
      * @return mixed
      */
+    public function getUsedMem();
+
+    /**
+     * @return mixed
+     */
     public function getTotalSwap();
 
     /**

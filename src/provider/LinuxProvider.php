@@ -47,6 +47,20 @@ class LinuxProvider extends AbstractUnixProvider
     /**
      * @inheritdoc
      */
+    public function getFreeSwap()
+    {
+        $memInfo = $this->getMemInfo();
+        return array_key_exists('SwapFree', $memInfo) ? (int) $memInfo['SwapFree'] : null;
+    }
+
+    public function getUsedSwap()
+    {
+        return $this->getTotalSwap() - $this->getFreeSwap();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getTotalMem()
     {
         $meminfo = $this->getMemInfo();
@@ -71,12 +85,10 @@ class LinuxProvider extends AbstractUnixProvider
     /**
      * @inheritdoc
      */
-    public function getFreeSwap()
+    public function getUsedMem()
     {
-        $memInfo = $this->getMemInfo();
-        return array_key_exists('SwapFree', $memInfo) ? (int) $memInfo['SwapFree'] : null;
+        return $this->getTotalMem() - $this->getUsedMem();
     }
-
 
     /**
      * @inheritdoc
