@@ -50,32 +50,38 @@ interface ProviderInterface
     public function getDbType(\PDO $connection);
 
     /**
-     * @return bool|int
+     * Total Memory in bytes
+     * @return int|null
      */
     public function getTotalMem();
 
     /**
-     * @return mixed
+     * Free Memory in bytes
+     * @return int|null
      */
     public function getFreeMem();
 
     /**
-     * @return mixed
+     * Used Memory in bytes
+     * @return int|null
      */
     public function getUsedMem();
 
     /**
-     * @return mixed
+     * Total Swap in bytes
+     * @return int|null
      */
     public function getTotalSwap();
 
     /**
-     * @return mixed
+     * Free Swap in bytes
+     * @return int|null
      */
     public function getFreeSwap();
 
     /**
-     * @return mixed
+     * Used Swap in bytes
+     * @return int|null
      */
     public function getUsedSwap();
 
