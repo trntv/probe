@@ -139,13 +139,11 @@ abstract class AbstractProvider implements ProviderInterface
     public function getPing(array $hosts = null, $count = 2)
     {
         if (!$hosts) {
-            $hosts = array("gnu.org", "github.com", "wikipedia.org");
+            $hosts = array('gnu.org', 'github.com', 'wikipedia.org');
         }
         $ping = [];
         for ($i = 0; $i < count($hosts); $i++) {
-            $command = self::isWindowsOs()
-                ? 'ping' // todo: Windows
-                : "/bin/ping -qc {$count} {$hosts[$i]} | awk -F/ '/^rtt/ { print $5 }'";
+            $command = "/bin/ping -qc {$count} {$hosts[$i]} | awk -F/ '/^rtt/ { print $5 }'";
             $result = array();
             exec($command, $result);
             $ping[$hosts[$i]] = isset($result[0]) ? $result[0] : false;

@@ -8,8 +8,17 @@ namespace probe\provider;
  */
 class WindowsProvider extends AbstractProvider
 {
+    /**
+     * @var string
+     */
     public $wmiHost;
+    /**
+     * @var string
+     */
     public $wmiUsername;
+    /**
+     * @var string
+     */
     public $wmiPassword;
 
     /**
@@ -17,21 +26,28 @@ class WindowsProvider extends AbstractProvider
      */
     protected $wmiConnection;
 
+    /**
+     * @var \VARIANT
+     */
     protected $cpuInfo;
 
     /**
-     * @return string
-     * @throws \Exception
+     * @return mixed
      */
-    public function getKernelVersion()
+    public function getOsRelease()
     {
-        $wmi = $this->getWMI();
-
-        foreach ($wmi->ExecQuery("SELECT WindowsVersion FROM Win32_Process WHERE Handle = 0") as $process) {
-            return $process->WindowsVersion;
+        $objSet = $this->getWMI()->ExecQuery("SELECT Name FROM Win32_OperatingSystem");
+        foreach ($objSet as $obj) {
+            return $obj->name;
         }
+    }
 
-        return "Unknown";
+    /**
+     * @return string
+     */
+    public function getOsType()
+    {
+        return 'Windows';
     }
 
     /**
@@ -40,9 +56,9 @@ class WindowsProvider extends AbstractProvider
      */
     public function getArchitecture()
     {
-        $wmi = $this->getWMI();
-        foreach ($wmi->ExecQuery("SELECT Architecture FROM Win32_Processor") as $cpu) {
-            switch ($cpu->Architecture) {
+        $objSet = $this->getWMI()->ExecQuery("SELECT Architecture FROM Win32_Processor");
+        foreach ($objSet as $obj) {
+            switch ($obj->Architecture) {
                 case 0:
                     return "x86";
                 case 1:
@@ -57,8 +73,27 @@ class WindowsProvider extends AbstractProvider
                     return "x64";
             }
         }
+    }
 
-        return "Unknown";
+    /**
+     * @param array $hosts
+     * @param int $count
+     * @return array
+     */
+    public function getPing(array $hosts = null, $count = 2)
+    {
+        if (!$hosts) {
+            $hosts = array('gnu.org', 'github.com', 'wikipedia.org');
+        }
+        $ping = [];
+        foreach ($hosts as $host) {
+            $command = "ping -n {$count} {$host}";
+            $result = exec($command);
+            $matches = [];
+            preg_match('/average\s?=\s?(\d+)/sim', $result, $matches);
+            $ping[$host] = $matches[1];
+        }
+        return $ping;
     }
 
     /**
@@ -67,9 +102,9 @@ class WindowsProvider extends AbstractProvider
      */
     public function getUptime()
     {
-        $buffer = $this->getWMI()->ExecQuery("SELECT SystemUpTime FROM Win32_PerfFormattedData_PerfOS_System");
-        foreach ($buffer as $b){
-           return $b->SystemUpTime;
+        $objSet = $this->getWMI()->ExecQuery("SELECT SystemUpTime FROM Win32_PerfFormattedData_PerfOS_System");
+        foreach ($objSet as $obj) {
+            return $obj->SystemUpTime;
         }
     }
 
@@ -93,27 +128,36 @@ class WindowsProvider extends AbstractProvider
     public function getCpuCores()
     {
         $cpuInfo = $this->getCpuInfo();
-        foreach($cpuInfo as $obj) {
+        foreach ($cpuInfo as $obj) {
             return $obj->NumberOfLogicalProcessors;
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function getCpuModel()
     {
         $cpuInfo = $this->getCpuInfo();
-        foreach($cpuInfo as $obj) {
+        foreach ($cpuInfo as $obj) {
             return $obj->Name;
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function getCpuVendor()
     {
         $cpuInfo = $this->getCpuInfo();
-        foreach($cpuInfo as $obj) {
+        foreach ($cpuInfo as $obj) {
             return $obj->Manufacturer;
         }
     }
 
+    /**
+     * @return \VARIANT
+     */
     public function getCpuInfo()
     {
         if ($this->cpuInfo === null) {
@@ -128,14 +172,14 @@ class WindowsProvider extends AbstractProvider
      */
     public function getTotalMem()
     {
-        $total_memory = 0;
-
-        foreach($this->getWMI()->ExecQuery("SELECT TotalPhysicalMemory FROM Win32_ComputerSystem") as $obj) {
-            $total_memory = $obj->TotalPhysicalMemory;
+        $totalMemory = 0;
+        $objSet = $this->getWMI()->ExecQuery("SELECT TotalPhysicalMemory FROM Win32_ComputerSystem");
+        foreach ($objSet as $obj) {
+            $totalMemory = $obj->TotalPhysicalMemory;
             break;
         }
 
-        return $total_memory;
+        return $totalMemory;
     }
 
     /**
@@ -144,25 +188,17 @@ class WindowsProvider extends AbstractProvider
      */
     public function getFreeMem()
     {
+        $freeMemory = 0;
         $objSet = $this->getWMI()->ExecQuery("SELECT FreePhysicalMemory FROM Win32_OperatingSystem");
         foreach ($objSet as $obj) {
-            return $obj->FreePhysicalMemory;
+            $freeMemory += $obj->FreePhysicalMemory;
         }
+        return $freeMemory;
     }
 
-    public function getOsRelease()
-    {
-        $objSet = $this->getWMI()->ExecQuery("SELECT Name FROM Win32_OperatingSystem");
-        foreach ($objSet as $obj) {
-            return $obj->name;
-        }
-    }
-
-    public function getOsType()
-    {
-        return 'Windows';
-    }
-
+    /**
+     * @return int
+     */
     public function getTotalSwap()
     {
         $total = 0;
@@ -173,6 +209,9 @@ class WindowsProvider extends AbstractProvider
         return $total;
     }
 
+    /**
+     * @return int
+     */
     public function getUsedSwap()
     {
         $used = 0;
@@ -183,6 +222,9 @@ class WindowsProvider extends AbstractProvider
         return $used;
     }
 
+    /**
+     * @return int
+     */
     public function getFreeSwap()
     {
         return $this->getTotalSwap() - $this->getUsedSwap();
@@ -194,7 +236,8 @@ class WindowsProvider extends AbstractProvider
     public function getCpuUsage()
     {
         $load = [];
-        foreach ($this->getWMI()->ExecQuery("SELECT LoadPercentage FROM Win32_Processor") as $obj) {
+        $objSet = $this->getWMI()->ExecQuery("SELECT LoadPercentage FROM Win32_Processor");
+        foreach ($objSet as $obj) {
             $load[] = $obj->LoadPercentage;
         }
 
@@ -221,7 +264,12 @@ class WindowsProvider extends AbstractProvider
         if ($this->wmiConnection === null) {
             $wmiLocator = new \COM('WbemScripting.SWbemLocator');
             try {
-                $this->wmiConnection = $wmiLocator->ConnectServer($this->wmiHost, 'root\CIMV2', $this->wmiUsername, $this->wmiPassword);
+                $this->wmiConnection = $wmiLocator->ConnectServer(
+                    $this->wmiHost,
+                    'root\CIMV2',
+                    $this->wmiUsername,
+                    $this->wmiPassword
+                );
                 $this->wmiConnection->Security_->impersonationLevel = 3;
             } catch (\Exception $e) {
                 if ($e->getCode() == '-2147352567') {
@@ -231,5 +279,13 @@ class WindowsProvider extends AbstractProvider
             }
         }
         return $this->wmiConnection;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsedMem()
+    {
+        return $this->getTotalMem() - $this->getFreeMem();
     }
 }
