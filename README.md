@@ -18,8 +18,10 @@ $provider->getFreeMem();
 - getDbType(\PDO $connection);
 - getTotalMem();
 - getFreeMem();
+- getUsedMem();
 - getTotalSwap();
 - getFreeSwap();
+- getUsedSwap();
 - getHostname();
 - isLinuxOs();
 - isWindowsOs();
@@ -29,7 +31,7 @@ $provider->getFreeMem();
 - getCpuCores();
 - getCpuModel();
 - getLoadAverage();
-- getCpuUsage($interval = 1);
+- getCpuUsage();
 - getServerIP();
 - getExternalIP();
 - getServerSoftware();
@@ -47,14 +49,14 @@ $provider->getFreeMem();
 
 ## Supported OS
 - Linux
+- Windows
 
-<!--
 **Note**: To get Windows System Information, you hould have `php_com_dotnet.dll` enabled in your `php.ini`.
 ```php
 [COM_DOT_NET] 
 extension=php_com_dotnet.dll
 ```
--->
+
 ## Other OS
 There are incomplete implementations of other OS providers in the separate branches. If you can help me to implement it 
 faster, make pull requests.
