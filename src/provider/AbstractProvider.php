@@ -144,7 +144,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function isPhpModuleLoaded($module)
     {
-        return in_array(strtolower($module), $this->getPhpModules(), false);
+        return extension_loaded($module);
     }
 
     /**
