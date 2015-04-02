@@ -41,6 +41,8 @@ $provider->getFreeMem();
 - getPhpInfo($what = -1);
 - getPhpVersion();
 - getPhpDisabledFunctions();
+- getPhpModules();
+- isPhpModuleLoaded($module);
 - getPing(array $hosts = null, $count = 2);
 - getServerVariable($key);
 - getPhpSapiName();

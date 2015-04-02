@@ -182,6 +182,17 @@ interface ProviderInterface
     public function getPhpDisabledFunctions();
 
     /**
+     * @return array
+     */
+    public function getPhpModules();
+
+    /**
+     * @param string $module
+     * @return bool
+     */
+    public function isPhpModuleLoaded($module);
+
+    /**
      * @param array $hosts
      * @param int $count
      * @return array
