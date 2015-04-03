@@ -66,6 +66,9 @@ extension=php_com_dotnet.dll
 There are incomplete implementations of other OS providers in the separate branches. If you can help me to implement it 
 faster, make pull requests.
 
+## Contributing
+I don't have any special rules for it. Any help in any way will be useful.
+
 ## TODO
 - disk usage
 - rx/tx
