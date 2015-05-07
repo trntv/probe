@@ -8,7 +8,7 @@ namespace probe\provider;
  * @author Semen Kotliarenko <semako.ua@gmail.com>
  * @package probe\os
  */
-class Mac extends AbstractBsdProvider
+class MacProvider extends AbstractBsdProvider
 {
     public function getOsType()
     {

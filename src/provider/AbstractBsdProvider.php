@@ -15,8 +15,7 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
     public function getTotalSwap()
     {
         $meminfo = $this->getMemInfo();
-        preg_match_all('/=(.*?)M/', $meminfo['vm.swapusage'], $res);
-        return isset($res[1][0]) ? (int)($res[1][0]) * 1024 * 1024 : null;
+        return array_key_exists('SwapTotal', $meminfo) ? (int) ($meminfo['SwapTotal'] * 1024) : null;
     }
 
     /**
@@ -55,7 +54,7 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
      */
     public function getOsKernelVersion()
     {
-        return shell_exec('uname -v');
+        return shell_exec('uname -r');
     }
 
     /**
@@ -64,7 +63,7 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
     public function getCpuModel()
     {
         $sysctlinfo = $this->getSysctlInfo();
-        return array_key_exists('hw.model', $sysctlinfo)
+        return array_key_exists('machdep.cpu.brand_string', $sysctlinfo)
             ? $sysctlinfo['machdep.cpu.brand_string']
             : null;
     }
@@ -139,9 +138,8 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
      */
     public function getFreeSwap()
     {
-        $meminfo = self::getMemInfo();
-        preg_match_all('/=(.*?)M/', $meminfo['vm.swapusage'], $res);
-        return isset($res[1][2]) ? intval($res[1][2]) * 1024 * 1024 : null;
+        $meminfo = $this->getMemInfo();
+        return array_key_exists('SwapFree', $meminfo) ? (int) ($meminfo['SwapFree'] * 1024) : null;
     }
 
     /**
@@ -177,8 +175,8 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
             $sysctl = $this->getSysctlInfo();
             $this->memInfo['MemTotal'] = array_key_exists('hw.memsize', $sysctl) ? intval($sysctl['hw.memsize'] / 1024) : null;
 
-            if (array_key_exists('hw.swapusage', $sysctl)) {
-                $tmp = explode('  ', $sysctl['hw.swapusage']);
+            if (array_key_exists('vm.swapusage', $sysctl)) {
+                $tmp = explode('  ', $sysctl['vm.swapusage']);
                 foreach ($tmp as $item) {
                     $item = explode(' = ', $item);
 
