@@ -127,10 +127,8 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
      */
     public function getUptime()
     {
-        $uptime = shell_exec("sysctl -n kern.boottime | awk '{print $4}' | sed 's/,//'");
-        if ($uptime) {
-            return (int)(time() - $uptime);
-        }
+        $sysctl = $this->getSysctlInfo();
+        return (int)substr($sysctl['kern.boottime'], 8, 10);
     }
 
     /**
