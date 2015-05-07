@@ -5,6 +5,7 @@ namespace probe;
 /**
  * Class Reader
  * @author Eugene Terentev <eugene@terentev.net>
+ * @author Semen Kotliarenko <semako.ua@gmail.com>
  * @package probe
  */
 class Factory
@@ -19,6 +20,7 @@ class Factory
      */
     public static $providers = [
         'Linux' => 'probe\provider\LinuxProvider',
+        'Mac' => 'probe\provider\MacProvider',
         'Windows' => 'probe\provider\WindowsProvider',
     ];
 
