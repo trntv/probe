@@ -1,5 +1,5 @@
 <?php
-namespace systeminfo\tests;
+namespace probe\tests;
 
 use PHPUnit_Framework_TestCase;
 use probe\Factory;
