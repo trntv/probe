@@ -25,7 +25,8 @@ class Factory
     ];
 
     /**
-     * @return provider\AbstractProvider|null
+     * @param array $config
+     * @return null|provider\AbstractProvider
      */
     public static function create($config = [])
     {

@@ -55,6 +55,7 @@ TBD
 ## Supported OS
 - Linux
 - Windows
+- MacOS
 
 **Note**: To get Windows System Information, you hould have `php_com_dotnet.dll` enabled in your `php.ini`.
 ```php
