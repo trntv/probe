@@ -123,15 +123,19 @@ class LinuxProvider extends AbstractUnixProvider
 	 */
 	public function getCpuinfoByLsCpu()
 	{
-        $lscpu = shell_exec('lscpu');
-        $lscpu = explode("\n", $lscpu);
-        $values = [];
-        foreach ($lscpu as $v) {
-            $v = array_map('trim', explode(':', $v));
-            if (isset($v[0], $v[1])) {
-                $values[$v[0]] = $v[1];
-            }
-        }
+		if (!$this->cpuInfoByLsCpu) {
+			$lscpu = shell_exec('lscpu');
+			$lscpu = explode("\n", $lscpu);
+			$values = [];
+			foreach ($lscpu as $v) {
+				$v = array_map('trim', explode(':', $v));
+				if (isset($v[0], $v[1])) {
+					$values[$v[0]] = $v[1];
+				}
+			}
+			$this->cpuInfoByLsCpu = $values;
+		}
+		return $this->cpuInfoByLsCpu;
 	}
 
     /**
@@ -160,8 +164,8 @@ class LinuxProvider extends AbstractUnixProvider
         $cu = $this->getCpuinfoByLsCpu();
         return array_key_exists('CPU(s)', $cu) ? $cu['CPU(s)'] : null;
     }
-	
-	/**
+    
+    /**
      * @inheritdoc
      */
     public function getCoresPerSocket()
