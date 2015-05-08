@@ -117,6 +117,26 @@ class LinuxProvider extends AbstractUnixProvider
         }
         return $this->cpuInfo;
     }
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function getCpuinfoByLsCpu()
+	{
+		if (!$this->cpuInfoByLsCpu) {
+			$lscpu = shell_exec('lscpu');
+			$lscpu = explode("\n", $lscpu);
+			$values = [];
+			foreach ($lscpu as $v) {
+				$v = array_map('trim', explode(':', $v));
+				if (isset($v[0], $v[1])) {
+					$values[$v[0]] = $v[1];
+				}
+			}
+			$this->cpuInfoByLsCpu = $values;
+		}
+		return $this->cpuInfoByLsCpu;
+	}
 
     /**
      * @inheritdoc
@@ -134,6 +154,24 @@ class LinuxProvider extends AbstractUnixProvider
     {
         $cu = $this->getCpuinfo();
         return array_key_exists('vendor_id', $cu) ? $cu['vendor_id'] : null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPhysicalCpus()
+    {
+        $cu = $this->getCpuinfoByLsCpu();
+        return array_key_exists('CPU(s)', $cu) ? $cu['CPU(s)'] : null;
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function getCoresPerSocket()
+    {
+        $cu = $this->getCpuinfoByLsCpu();
+        return array_key_exists('Core(s) per socket', $cu) ? $cu['Core(s) per socket'] : null;
     }
 
     /**

@@ -9,6 +9,7 @@ namespace probe\provider;
 abstract class AbstractUnixProvider extends AbstractProvider
 {
     protected $cpuInfo;
+	protected $cpuInfoByLsCpu;
     protected $memInfo;
     protected $sysctlInfo;
 
