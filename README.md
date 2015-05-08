@@ -28,6 +28,7 @@ $provider->getFreeMem();
 - isBsdOs();
 - isMacOs();
 - getUptime();
+- getPhysicalCpus();
 - getCpuCores();
 - getCpuPhysicalCore();
 - getCpuModel();
@@ -49,23 +50,20 @@ $provider->getFreeMem();
 - isFpm();
 - isCli();
 
-## Table of methods supported by different OS
-TBD
-
 ## Supported OS
 - Linux
 - Windows
 - MacOS
+
+## Linux Specific methods
+- getCoresPerSocket()
+- getCpuinfoByLsCpu()
 
 **Note**: To get Windows System Information, you hould have `php_com_dotnet.dll` enabled in your `php.ini`.
 ```php
 [COM_DOT_NET] 
 extension=php_com_dotnet.dll
 ```
-
-## Other OS
-There are incomplete implementations of other OS providers in the separate branches. If you can help me to implement it 
-faster, make pull requests.
 
 ## Contributing
 I don't have any special rules for it. Any help in any way will be useful.

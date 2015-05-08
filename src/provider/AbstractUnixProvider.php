@@ -3,13 +3,10 @@
 namespace probe\provider;
 
 /**
- * Class AbstractNixProvider
  * @author Eugene Terentev <eugene@terentev.net>
  */
 abstract class AbstractUnixProvider extends AbstractProvider
 {
-    protected $cpuInfo;
-	protected $cpuInfoByLsCpu;
     protected $memInfo;
     protected $sysctlInfo;
 
@@ -19,7 +16,7 @@ abstract class AbstractUnixProvider extends AbstractProvider
      */
     public function getCpuUsage($interval = 1)
     {
-        $stat = function() {
+        $stat = function () {
             $stat = file_get_contents('/proc/stat');
             $stat = explode("\n", $stat);
             $result = [];

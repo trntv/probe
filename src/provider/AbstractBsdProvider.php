@@ -3,8 +3,6 @@
 namespace probe\provider;
 
 /**
- * Class AbstractBSD
- * @package probe\provider
  * @author Eugene Terentev <eugene@terentev.net>
  * @author Semen Kotliarenko <semako.ua@gmail.com>
  */
@@ -86,6 +84,14 @@ abstract class AbstractBsdProvider extends AbstractUnixProvider
     {
         $cu = $this->getCpuinfo();
         return array_key_exists('machdep.cpu.vendor', $cu) ? $cu['machdep.cpu.vendor'] : null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPhysicalCpus()
+    {
+        throw new NotImplementedException;
     }
 
     /**

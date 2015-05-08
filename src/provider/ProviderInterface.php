@@ -6,8 +6,7 @@
 namespace probe\provider;
 
 /**
- * Interface ProviderInterface
- * @package systeminfo\provider
+ * @author Eugene Terentev <eugene@terentev.net>
  */
 interface ProviderInterface
 {
@@ -118,6 +117,11 @@ interface ProviderInterface
     /**
      * @return int|null
      */
+    public function getPhysicalCpus();
+
+    /**
+     * @return int|null
+     */
     public function getCpuCores();
 
     /**
@@ -220,4 +224,19 @@ interface ProviderInterface
      * @return bool
      */
     public function isFpm();
+
+    /**
+     * @return mixed
+     */
+    public function getDiskUsage();
+
+    /**
+     * @return mixed
+     */
+    public function getDiskTotal();
+
+    /**
+     * @return mixed
+     */
+    public function getDiskFree();
 }

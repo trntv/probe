@@ -3,7 +3,6 @@
 namespace probe\provider;
 
 /**
- * Class BaseInfo
  * @author Eugene Terentev <eugene@terentev.net>
  */
 abstract class AbstractProvider implements ProviderInterface
@@ -165,14 +164,6 @@ abstract class AbstractProvider implements ProviderInterface
             $ping[$hosts[$i]] = isset($result[0]) ? $result[0] : false;
         }
         return $ping;
-    }
-
-    /**
-     *
-     */
-    public function getDiskUsage()
-    {
-        // todo: Function
     }
 
     /**

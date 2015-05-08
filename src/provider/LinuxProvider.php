@@ -3,12 +3,20 @@
 namespace probe\provider;
 
 /**
- * Class LinuxProvider
- * @package probe\provider
+ * Linux information provider
  * @author Eugene Terentev <eugene@terentev.net>
  */
 class LinuxProvider extends AbstractUnixProvider
 {
+    /**
+     * @var array|null
+     */
+    protected $cpuInfo;
+    /**
+     * @var
+     */
+    protected $cpuInfoByLsCpu;
+
     /**
      * @inheritdoc
      */
@@ -53,6 +61,9 @@ class LinuxProvider extends AbstractUnixProvider
         return array_key_exists('SwapFree', $memInfo) ? (int) ($memInfo['SwapFree'] * 1024) : null;
     }
 
+    /**
+     * @return int|null
+     */
     public function getUsedSwap()
     {
         return $this->getTotalSwap() - $this->getFreeSwap();
@@ -117,26 +128,27 @@ class LinuxProvider extends AbstractUnixProvider
         }
         return $this->cpuInfo;
     }
-	
-	/**
-	 * @inheritdoc
-	 */
-	public function getCpuinfoByLsCpu()
-	{
-		if (!$this->cpuInfoByLsCpu) {
-			$lscpu = shell_exec('lscpu');
-			$lscpu = explode("\n", $lscpu);
-			$values = [];
-			foreach ($lscpu as $v) {
-				$v = array_map('trim', explode(':', $v));
-				if (isset($v[0], $v[1])) {
-					$values[$v[0]] = $v[1];
-				}
-			}
-			$this->cpuInfoByLsCpu = $values;
-		}
-		return $this->cpuInfoByLsCpu;
-	}
+
+    /**
+     * Get information about CPU using lscpu untility
+     * @return array
+     */
+    public function getCpuinfoByLsCpu()
+    {
+        if (!$this->cpuInfoByLsCpu) {
+            $lscpu = shell_exec('lscpu');
+            $lscpu = explode("\n", $lscpu);
+            $values = [];
+            foreach ($lscpu as $v) {
+                $v = array_map('trim', explode(':', $v));
+                if (isset($v[0], $v[1])) {
+                    $values[$v[0]] = $v[1];
+                }
+            }
+            $this->cpuInfoByLsCpu = $values;
+        }
+        return $this->cpuInfoByLsCpu;
+    }
 
     /**
      * @inheritdoc
@@ -157,7 +169,8 @@ class LinuxProvider extends AbstractUnixProvider
     }
 
     /**
-     * @inheritdoc
+     * Return number of physical CPUs
+     * @return mixed|null
      */
     public function getPhysicalCpus()
     {
@@ -166,7 +179,7 @@ class LinuxProvider extends AbstractUnixProvider
     }
     
     /**
-     * @inheritdoc
+     * @return mixed|null
      */
     public function getCoresPerSocket()
     {
@@ -190,5 +203,29 @@ class LinuxProvider extends AbstractUnixProvider
     {
         $cu = $this->getCpuinfo();
         return array_key_exists('cpu cores', $cu) ? $cu['cpu cores'] : null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDiskUsage()
+    {
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDiskTotal()
+    {
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDiskFree()
+    {
+        throw new NotImplementedException;
     }
 }

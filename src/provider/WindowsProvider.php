@@ -299,4 +299,36 @@ class WindowsProvider extends AbstractProvider
     {
         return $this->getTotalMem() - $this->getFreeMem();
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPhysicalCpus()
+    {
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDiskUsage()
+    {
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDiskTotal()
+    {
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDiskFree()
+    {
+        throw new NotImplementedException;
+    }
 }
