@@ -98,7 +98,7 @@ class LinuxProvider extends AbstractUnixProvider
      */
     public function getUsedMem()
     {
-        return $this->getTotalMem() - $this->getUsedMem();
+        return $this->getTotalMem() - $this->getFreeMem();
     }
 
     /**

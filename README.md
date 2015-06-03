@@ -55,15 +55,17 @@ $provider->getFreeMem();
 - Windows
 - MacOS
 
-## Linux Specific methods
-- getCoresPerSocket()
-- getCpuinfoByLsCpu()
-
 **Note**: To get Windows System Information, you hould have `php_com_dotnet.dll` enabled in your `php.ini`.
 ```php
 [COM_DOT_NET] 
 extension=php_com_dotnet.dll
 ```
+
+## Linux Specific methods
+- getCoresPerSocket()
+- getCpuinfoByLsCpu()
+
+
 
 ## Contributing
 I don't have any special rules for it. Any help in any way will be useful.
