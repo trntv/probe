@@ -130,9 +130,14 @@ interface ProviderInterface
     public function getCpuPhysicalCores();
 
     /**
-     * @return array|null
+     * @return string|null
      */
     public function getCpuModel();
+
+    /**
+     * @return string|null
+     */
+    public function getCpuVendor();
 
     /**
      * @return array

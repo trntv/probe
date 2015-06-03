@@ -29,7 +29,7 @@ class AbstractProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(php_sapi_name(), $this->provider->getPhpSapiName());
     }
 
-    public function testBooleanMethods()
+    public function testBooleanResults()
     {
         $this->assertInternalType('boolean', $this->provider->isNginx());
         $this->assertInternalType('boolean', $this->provider->isApache());
@@ -42,9 +42,30 @@ class AbstractProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('boolean', $this->provider->isFpm());
     }
 
+    public function testStringResults()
+    {
+        $this->assertInternalType('string', $this->provider->getOsRelease());
+        $this->assertInternalType('string', $this->provider->getOsType());
+        $this->assertInternalType('string', $this->provider->getOsKernelVersion());
+        $this->assertInternalType('string', $this->provider->getArchitecture());
+        $this->assertInternalType('string', $this->provider->getCpuModel());
+        $this->assertInternalType('string', $this->provider->getCpuVendor());
+        $this->assertInternalType('string', $this->provider->getPhpInfo());
+    }
+
     public function testGetUptime()
     {
         $this->assertInternalType('integer', $this->provider->getUptime());
         $this->assertGreaterThan(0, $this->provider->getUptime());
+    }
+
+    public function testNoException()
+    {
+        try {
+            $this->provider->getCpuUsage();
+        } catch (\Exception $notExpected) {
+            $this->fail();
+        }
+        $this->assertTrue(true);
     }
 }
