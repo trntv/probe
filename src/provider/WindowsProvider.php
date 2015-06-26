@@ -249,7 +249,7 @@ class WindowsProvider extends AbstractProvider
         $load = [];
         $objSet = $this->getWMI()->ExecQuery("SELECT LoadPercentage FROM Win32_Processor");
         foreach ($objSet as $obj) {
-            $load[] = $obj->LoadPercentage;
+            $load[] = $obj->LoadPercentage / 100;
         }
 
         return $load;
