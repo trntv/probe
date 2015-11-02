@@ -9,6 +9,7 @@ abstract class AbstractUnixProvider extends AbstractProvider
 {
     protected $memInfo;
     protected $sysctlInfo;
+    protected $diskUsageInfo;
 
     /**
      * @param int $interval
@@ -92,5 +93,27 @@ abstract class AbstractUnixProvider extends AbstractProvider
         } else {
             throw new \InvalidArgumentException;
         }
+    }
+
+    /**
+    * @return $mixed
+    */
+    public function getDiskUsageInfo()
+    {
+        if(null === $this->diskUsageInfo) {
+            $data = explode(PHP_EOL, shell_exec('df -h --total|awk \'{print $1" "$2" "$3" "$4" "$5" "$6}\''));
+            $this->diskUsageInfo = [];
+            foreach ($data as $row => $line) {
+                if($row == 0 || !$line){
+                    continue;
+                }
+
+                list($filesystem, $size, $used, $avail, $usepercentage, $mountedon) = explode(" ", $line);
+                if (isset($filesystem, $size, $used, $avail, $usepercentage, $mountedon)) {
+                    $this->diskUsageInfo[$mountedon] = ['filesystem' => $filesystem, 'size' => $size, 'used' => $used, 'avail' => $avail, 'usepercentage' => $usepercentage, 'mountedon' => $mountedon];
+                }
+            }
+        }
+        return $this->diskUsageInfo;
     }
 }

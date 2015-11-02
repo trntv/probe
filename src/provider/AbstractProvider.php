@@ -76,7 +76,8 @@ abstract class AbstractProvider implements ProviderInterface
             return trim($output[0]);
         }
 
-        return null;
+        $cmd = 'curl api.ipify.org';
+        return shell_exec($cmd);
     }
 
     /**
