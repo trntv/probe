@@ -210,7 +210,7 @@ class LinuxProvider extends AbstractUnixProvider
      */
     public function getDiskUsage()
     {
-        throw new NotImplementedException;
+        return $this->getDiskUsageInfo();
     }
 
     /**
@@ -218,7 +218,8 @@ class LinuxProvider extends AbstractUnixProvider
      */
     public function getDiskTotal()
     {
-        throw new NotImplementedException;
+        $du = $this->getDiskUsageInfo();
+        return array_key_exists('-', $du) ? $du['-']['size'] : null;
     }
 
     /**
@@ -226,6 +227,7 @@ class LinuxProvider extends AbstractUnixProvider
      */
     public function getDiskFree()
     {
-        throw new NotImplementedException;
+        $du = $this->getDiskUsageInfo();
+        return array_key_exists('-', $du) ? $du['-']['avail'] : null;
     }
 }
