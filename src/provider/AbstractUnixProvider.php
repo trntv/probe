@@ -38,9 +38,11 @@ abstract class AbstractUnixProvider extends AbstractProvider
         $stat2 = $stat();
         $usage = [];
         for ($i = 0; $i < $this->getCpuCores(); $i++) {
-            $total = array_sum($stat2[$i]) - array_sum($stat1[$i]);
-            $idle = $stat2[$i][3] - $stat1[$i][3];
-            $usage[$i] = $total !== 0 ? ($total - $idle) / $total : 0;
+            if (isset($stat1[$i]) && isset($stat2[$i])) {
+                $total = array_sum($stat2[$i]) - array_sum($stat1[$i]);
+                $idle = $stat2[$i][3] - $stat1[$i][3];
+                $usage[$i] = $total !== 0 ? ($total - $idle) / $total : 0;
+            }
         }
         return $usage;
     }
