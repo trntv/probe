@@ -58,7 +58,7 @@ class LinuxProvider extends AbstractUnixProvider
     public function getFreeSwap()
     {
         $memInfo = $this->getMemInfo();
-        return array_key_exists('SwapFree', $memInfo) ? (int) ($memInfo['SwapFree'] * 1024) : null;
+        return array_key_exists('SwapFree', $memInfo) ? intval($memInfo['SwapFree']) * 1024 : null;
     }
 
     /**
