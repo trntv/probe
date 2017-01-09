@@ -49,7 +49,7 @@ class LinuxProvider extends AbstractUnixProvider
     public function getTotalSwap()
     {
         $meminfo = $this->getMemInfo();
-        return array_key_exists('SwapTotal', $meminfo) ? (int) ($meminfo['SwapTotal'] * 1024) : null;
+        return array_key_exists('SwapTotal', $meminfo) ? intval($meminfo['SwapTotal']) * 1024 : null;
     }
 
     /**
@@ -75,7 +75,7 @@ class LinuxProvider extends AbstractUnixProvider
     public function getTotalMem()
     {
         $meminfo = $this->getMemInfo();
-        return array_key_exists('MemTotal', $meminfo) ? (int) ($meminfo['MemTotal'] * 1024) : null;
+        return array_key_exists('MemTotal', $meminfo) ? intval($meminfo['MemTotal']) * 1024 : null;
     }
 
     /**
@@ -210,7 +210,7 @@ class LinuxProvider extends AbstractUnixProvider
      */
     public function getDiskUsage()
     {
-        return $this->getDiskUsageInfo();
+        throw new NotImplementedException;
     }
 
     /**
@@ -218,8 +218,7 @@ class LinuxProvider extends AbstractUnixProvider
      */
     public function getDiskTotal()
     {
-        $du = $this->getDiskUsageInfo();
-        return array_key_exists('-', $du) ? $du['-']['size'] : null;
+        throw new NotImplementedException;
     }
 
     /**
@@ -227,7 +226,6 @@ class LinuxProvider extends AbstractUnixProvider
      */
     public function getDiskFree()
     {
-        $du = $this->getDiskUsageInfo();
-        return array_key_exists('-', $du) ? $du['-']['avail'] : null;
+        throw new NotImplementedException;
     }
 }
