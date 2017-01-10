@@ -49,7 +49,7 @@ class LinuxProvider extends AbstractUnixProvider
     public function getTotalSwap()
     {
         $meminfo = $this->getMemInfo();
-        return array_key_exists('SwapTotal', $meminfo) ? (int) ($meminfo['SwapTotal'] * 1024) : null;
+        return array_key_exists('SwapTotal', $meminfo) ? intval($meminfo['SwapTotal']) * 1024 : null;
     }
 
     /**
@@ -58,7 +58,7 @@ class LinuxProvider extends AbstractUnixProvider
     public function getFreeSwap()
     {
         $memInfo = $this->getMemInfo();
-        return array_key_exists('SwapFree', $memInfo) ? (int) ($memInfo['SwapFree'] * 1024) : null;
+        return array_key_exists('SwapFree', $memInfo) ? intval($memInfo['SwapFree']) * 1024 : null;
     }
 
     /**
@@ -75,7 +75,7 @@ class LinuxProvider extends AbstractUnixProvider
     public function getTotalMem()
     {
         $meminfo = $this->getMemInfo();
-        return array_key_exists('MemTotal', $meminfo) ? (int) ($meminfo['MemTotal'] * 1024) : null;
+        return array_key_exists('MemTotal', $meminfo) ? intval($meminfo['MemTotal']) * 1024 : null;
     }
 
     /**
