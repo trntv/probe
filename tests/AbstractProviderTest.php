@@ -3,9 +3,9 @@
  * @author Eugene Terentev <eugene@terentev.net>
  */
 
-namespace probe\tests;
+namespace Probe\Tests;
 
-use probe\Factory;
+use Probe\ProviderFactory;
 
 class AbstractProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,7 +16,7 @@ class AbstractProviderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->provider = Factory::create();
+        $this->provider = ProviderFactory::create();
     }
 
     public function testGetPhpVersion()

@@ -2,7 +2,7 @@ System Information Provider
 ================================
 This package provide an easy interface to get information about system it is running on.
 ```php
-$provider = \probe\Factory::create();
+$provider = \Probe\ProviderFactory::create();
 $provider->getCpuModel();
 $provider->getCpuUsage();
 $provider->getFreeMem();
@@ -64,8 +64,6 @@ extension=php_com_dotnet.dll
 ## Linux Specific methods
 - getCoresPerSocket()
 - getCpuinfoByLsCpu()
-
-
 
 ## Contributing
 I don't have any special rules for it. Any help in any way will be useful.

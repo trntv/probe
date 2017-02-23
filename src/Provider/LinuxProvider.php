@@ -1,6 +1,6 @@
 <?php
 
-namespace probe\provider;
+namespace Probe\Provider;
 
 /**
  * Linux information provider

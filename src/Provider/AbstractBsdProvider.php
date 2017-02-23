@@ -1,6 +1,6 @@
 <?php
 
-namespace probe\provider;
+namespace Probe\Provider;
 
 /**
  * @author Eugene Terentev <eugene@terentev.net>
@@ -8,6 +8,11 @@ namespace probe\provider;
  */
 abstract class AbstractBsdProvider extends AbstractUnixProvider
 {
+    /**
+     * @var array|null
+     */
+    private $cpuInfo;
+
     /**
      */
     public function getTotalSwap()

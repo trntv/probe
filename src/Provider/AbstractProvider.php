@@ -1,6 +1,6 @@
 <?php
 
-namespace probe\provider;
+namespace Probe\Provider;
 
 /**
  * @author Eugene Terentev <eugene@terentev.net>
@@ -31,6 +31,9 @@ abstract class AbstractProvider implements ProviderInterface
         return php_uname('m');
     }
 
+    /**
+     * @return bool
+     */
     public function isLinuxOs()
     {
         return $this->getOsType() === 'Linux';
@@ -52,6 +55,9 @@ abstract class AbstractProvider implements ProviderInterface
         return $this->getOsType() === 'BSD';
     }
 
+    /**
+     * @return bool
+     */
     public function isMacOs()
     {
         return $this->getOsType() === 'Mac';
@@ -208,16 +214,25 @@ abstract class AbstractProvider implements ProviderInterface
         return isset($_SERVER[$key]) ? $_SERVER[$key] : null;
     }
 
+    /**
+     * @return string
+     */
     public function getPhpSapiName()
     {
         return php_sapi_name();
     }
 
+    /**
+     * @return bool
+     */
     public function isFpm()
     {
         return strtolower(substr($this->getPhpSapiName(), 0, 3)) === 'fpm';
     }
 
+    /**
+     * @return bool
+     */
     public function isCli()
     {
         return strtolower(substr($this->getPhpSapiName(), 0, 3)) === 'cli';

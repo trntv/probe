@@ -1,14 +1,23 @@
 <?php
 
-namespace probe\provider;
+namespace Probe\Provider;
 
 /**
  * @author Eugene Terentev <eugene@terentev.net>
  */
 abstract class AbstractUnixProvider extends AbstractProvider
 {
+    /**
+     * @var array|null
+     */
     protected $memInfo;
+    /**
+     * @var array|null
+     */
     protected $sysctlInfo;
+    /**
+     * @var array|null
+     */
     protected $diskUsageInfo;
 
     /**
@@ -53,7 +62,8 @@ abstract class AbstractUnixProvider extends AbstractProvider
     public function getSysctlInfo()
     {
         if (null === $this->sysctlInfo) {
-            $data = explode(PHP_EOL, shell_exec('sysctl -A'));
+            $sysctlbin = $this->getSysctlPath();
+            $data = explode(PHP_EOL, shell_exec("{$sysctlbin} -A"));
             $this->sysctlInfo = [];
             foreach ($data as $line) {
                 $line = explode(':', $line);
@@ -63,6 +73,22 @@ abstract class AbstractUnixProvider extends AbstractProvider
             }
         }
         return $this->sysctlInfo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSysctlPath()
+    {
+        $paths = explode(':', getenv('PATH'));
+        foreach ($paths as $path) {
+            $abs = $path . DIRECTORY_SEPARATOR . 'sysctl';
+            if (file_exists($abs)) {
+                return $abs;
+            }
+        }
+
+        return 'sysctl';
     }
 
     /**

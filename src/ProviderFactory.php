@@ -1,14 +1,13 @@
 <?php
 
-namespace probe;
+namespace Probe;
 
 /**
- * Class Reader
+ * Provider Factory
  * @author Eugene Terentev <eugene@terentev.net>
  * @author Semen Kotliarenko <semako.ua@gmail.com>
- * @package probe
  */
-class Factory
+class ProviderFactory
 {
     /**
      * @var
@@ -19,9 +18,9 @@ class Factory
      * @var array
      */
     public static $providers = [
-        'Linux' => 'probe\provider\LinuxProvider',
-        'Mac' => 'probe\provider\MacProvider',
-        'Windows' => 'probe\provider\WindowsProvider',
+        'Linux' => '\Probe\Provider\LinuxProvider',
+        'Mac' => '\Probe\Provider\MacProvider',
+        'Windows' => '\Probe\Provider\WindowsProvider',
     ];
 
     /**
