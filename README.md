@@ -2,7 +2,7 @@ System Information Provider
 ================================
 This package provide an easy interface to get information about system it is running on.
 ```php
-$provider = \Probe\ProviderFactory::create();
+$provider = \probe\ProviderFactory::create();
 $provider->getCpuModel();
 $provider->getCpuUsage();
 $provider->getFreeMem();
