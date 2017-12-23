@@ -53,6 +53,14 @@ class AbstractProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('string', $this->provider->getPhpInfo());
     }
 
+    public function testIntegerResults()
+    {
+        $this->assertInternalType('integer', $this->provider->getTotalMem());
+        $this->assertGreaterThan(0, $this->provider->getTotalMem());
+        $this->assertInternalType('integer', $this->provider->getFreeMem());
+        $this->assertInternalType('integer', $this->provider->getUsedMem());
+    }
+
     public function testGetUptime()
     {
         $this->assertInternalType('integer', $this->provider->getUptime());
