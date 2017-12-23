@@ -1,5 +1,7 @@
 System Information Provider
 ================================
+[![Build Status](https://travis-ci.org/trntv/probe.svg?branch=master)](https://travis-ci.org/trntv/probe)
+
 This package provide an easy interface to get information about system it is running on.
 ```php
 $provider = \Probe\ProviderFactory::create();
