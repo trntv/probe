@@ -25,7 +25,7 @@ class ProviderFactory
 
     /**
      * @param array $config
-     * @return null|provider\AbstractProvider
+     * @return null|Provider\AbstractProvider
      */
     public static function create($config = [])
     {
