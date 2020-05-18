@@ -115,7 +115,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function isApache()
     {
-        return strpos(strtolower(self::getServerSoftware()), 'apache') !== false;
+        return strpos(strtolower($this->getServerSoftware()), 'apache') !== false;
     }
 
     /**
