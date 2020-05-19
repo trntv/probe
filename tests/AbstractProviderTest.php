@@ -34,7 +34,7 @@ class AbstractProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('boolean', $this->provider->isNginx());
         $this->assertInternalType('boolean', $this->provider->isApache());
         $this->assertInternalType('boolean', $this->provider->isISS());
-        $this->assertInternalType('boolean', $this->provider->isBSDOs());
+        $this->assertInternalType('boolean', $this->provider->isBsdOs());
         $this->assertInternalType('boolean', $this->provider->isLinuxOs());
         $this->assertInternalType('boolean', $this->provider->isWindowsOs());
         $this->assertInternalType('boolean', $this->provider->isMacOs());
