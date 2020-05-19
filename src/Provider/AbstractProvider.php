@@ -50,7 +50,7 @@ abstract class AbstractProvider implements ProviderInterface
     /**
      * @return bool
      */
-    public function isBSDOs()
+    public function isBsdOs()
     {
         return $this->getOsType() === 'BSD';
     }
